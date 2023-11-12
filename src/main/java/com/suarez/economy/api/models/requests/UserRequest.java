@@ -35,7 +35,7 @@ public class UserRequest {
     @NotBlank(message = "La dirección es obligatorio")
     private String address;
 
-    @NotBlank(message = "El teléfono es obligatorio")
+    @NotBlank(message = "La contraseña es obligatorio")
     private String password;
 
     private Boolean status;

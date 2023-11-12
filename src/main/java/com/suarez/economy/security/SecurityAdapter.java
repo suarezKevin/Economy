@@ -34,7 +34,8 @@ public class SecurityAdapter {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/public/**",
-            "/doc/**"
+            "/doc/**",
+            "/**"
 
     };
 

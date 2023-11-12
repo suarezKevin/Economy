@@ -50,6 +50,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         if (request.getLogo() != null){
             institution.setLogo(request.getLogo());
         }
+        institutionRepository.save(institution);
         User user = UserMapper.INSTANCE.userFromUserRequest(request);
         user.setInstitution(institution);
         UserResponseDTO userResponseDTO = UserMapper.INSTANCE.userResponseDTOFromUser(userRepository.save(user));

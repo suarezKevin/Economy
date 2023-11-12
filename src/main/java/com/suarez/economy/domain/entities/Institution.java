@@ -23,7 +23,6 @@ public class Institution {
     @Column(length = 50, nullable = false)
     private String name;
 
-    @Column(nullable = false)
     private String logo;
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "institution")
