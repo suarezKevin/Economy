@@ -23,6 +23,6 @@ public class CreditResponse {
 
     private Double interestrate;
 
-    private UUID institutionId;
+    private UUID institution;
 
 }

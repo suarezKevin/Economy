@@ -45,7 +45,7 @@ public interface UserMapper {
 
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "institution", ignore = true)
-    @Mapping(target = "fullName", source = "request.fullname")
+    @Mapping(target = "fullname", source = "request.fullname")
     @Mapping(target = "email", source = "request.email")
     @Mapping(target = "identification", source = "request.identification")
     @Mapping(target = "telephone", source = "request.telephone")

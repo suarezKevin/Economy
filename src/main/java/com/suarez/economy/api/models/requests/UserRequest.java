@@ -19,7 +19,7 @@ public class UserRequest {
 
     @NotBlank(message = "El nombre completo es obligatorio")
     @Size(max = 80, message = "El nombre completo no puede tener mas de 80 caracteres")
-    private String fullName;
+    private String fullname;
 
     @NotBlank(message = "El nombre de la institución es obligatorio")
     @Size(max = 80, message = "El nombre de la institución no puede tener mas de 80 caracteres")
@@ -31,6 +31,9 @@ public class UserRequest {
 
     @NotBlank(message = "El teléfono es obligatorio")
     private String telephone;
+
+    @NotBlank(message = "La dirección es obligatorio")
+    private String address;
 
     @NotBlank(message = "El teléfono es obligatorio")
     private String password;

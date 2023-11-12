@@ -20,8 +20,6 @@ public interface CreditMapper {
     @Mapping(target = "indirectCharges", ignore = true)
     Credit creditFromCreditRequest(CreditRequest request);
 
-    @Mapping(target = "amortizations", ignore = true)
-    @Mapping(target = "indirectCharges", ignore = true)
     @Mapping(target = "institution", source = "credit.institution.id")
     CreditResponse creditResponseFromCredit(Credit credit);
 

@@ -59,7 +59,7 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
     @Override
     public ResponseEntity<CustomAPIResponse<?>> update(UUID id, UserRequest request) {
         User userToEdit = userRepository.findById(id).orElseThrow(()-> new RuntimeException("El usuario con id " + id + "no existe."));
-        userToEdit.setFullname(request.getFullName());
+        userToEdit.setFullname(request.getFullname());
         userToEdit.setEmail(request.getEmail());
         userToEdit.setPassword(request.getPassword());
         userToEdit.setTelephone(request.getTelephone());

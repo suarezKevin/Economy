@@ -49,8 +49,8 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateToken(authentication);
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        
-        return responseBuilder.buildResponse(HttpStatus.OK, "Usuario logeado exitosamente", response);
+
+        return responseBuilder.buildResponse(HttpStatus.OK, "Usuario logeado exitosamente");
     }
 
 }
