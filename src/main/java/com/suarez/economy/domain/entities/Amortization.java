@@ -33,6 +33,6 @@ public class Amortization {
     private Credit credit;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Client client;
+    private User user;
 
 }

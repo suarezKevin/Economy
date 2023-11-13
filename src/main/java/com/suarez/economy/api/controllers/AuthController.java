@@ -1,12 +1,11 @@
 package com.suarez.economy.api.controllers;
 
-import com.suarez.economy.api.models.requests.LoginRequest;
 import com.suarez.economy.api.models.requests.UserRequest;
-import com.suarez.economy.api.models.responses.JWTResponse;
 import com.suarez.economy.common.CustomAPIResponse;
 import com.suarez.economy.common.CustomResponseBuilder;
+import com.suarez.economy.dtos.DtoAuthRespuesta;
+import com.suarez.economy.dtos.DtoLogin;
 import com.suarez.economy.security.jwt.JWTProvider;
-import com.suarez.economy.security.model.UserPrincipal;
 import com.suarez.economy.service.abstract_services.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "public/auth")
-
 public class AuthController {
 
-    private final AuthenticationManager authenticationManager;
-
+    private AuthenticationManager authenticationManager;
     private final IUserService userService;
 
     private final JWTProvider jwtProvider;
@@ -45,13 +42,12 @@ public class AuthController {
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity<CustomAPIResponse<?>> logIn(@RequestBody final LoginRequest loginRequest){
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.email(), loginRequest.password()));
+    public ResponseEntity<DtoAuthRespuesta> login(@RequestBody DtoLogin dtoLogin) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                dtoLogin.getEmail(), dtoLogin.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtProvider.generateToken(authentication);
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-
-        return responseBuilder.buildResponse(HttpStatus.OK, "Usuario logeado exitosamente");
+        String token = jwtProvider.generarToken(authentication);
+        return new ResponseEntity<>(new DtoAuthRespuesta(token), HttpStatus.OK);
     }
 
 }

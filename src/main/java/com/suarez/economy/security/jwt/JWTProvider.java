@@ -1,79 +1,55 @@
 package com.suarez.economy.security.jwt;
 
-import com.suarez.economy.security.model.UserPrincipal;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
-import io.jsonwebtoken.*;
+import com.suarez.economy.security.ConstantesSeguridad;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JWTProvider {
 
-    private Key jwtSecret = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    //Método para crear un token por medio de la authentication
+    public String generarToken(Authentication authentication) {
 
-    @Value("${jwt.expirationTimeInMs}")
-    private int jwExpirationTimeInMs;
+        String username = authentication.getName();
+        Date tiempoActual = new Date();
+        Date expiracionToken = new Date(tiempoActual.getTime() + ConstantesSeguridad.JWT_EXPIRATION_TOKEN);
 
-    /**
-     * The function takes in an authentication object and returns a JWT token
-     *
-     * @param authentication This is the authentication object that contains the
-     *                       user's credentials.
-     * @return A JWT token.
-     */
-    public String generateToken(Authentication authentication) {
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + jwExpirationTimeInMs * 1000L * 2);
-
-        return Jwts.builder()
-                .setSubject(userPrincipal.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
-                .signWith(jwtSecret)
-                .compact();
+        //Linea para generar el token
+        String token = Jwts.builder() //Construimos un token JWT llamado token
+                .setSubject(username) //Aca establecemos el nombre de usuario que está iniciando sesión
+                .setIssuedAt(new Date()) //Establecemos la fecha de emisión del token en el momento actual
+                .setExpiration(expiracionToken) //Establecemos la fecha de caducidad del token
+                .signWith(SignatureAlgorithm.HS512, ConstantesSeguridad.JWT_FIRMA) /*Utilizamos este método para firmar
+                nuestro token y de esta manera evitar la manipulación o modificación de este*/
+                .compact(); //Este método finaliza la construcción del token y lo convierte en una cadena compacta
+        return token;
     }
 
-    /**
-     * The function takes a JWT token as a parameter, parses it, and returns the
-     * username from the
-     * token
-     *
-     * @param token The JWT token that you want to parse.
-     * @return The username of the user who is logged in.
-     */
-    public String getUsernameFromJWT(String token) {
-
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtSecret)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
+    //Método para extraer un Username apartir de un token
+    public String obtenerUsernameDeJwt(String token) {
+        Claims claims = Jwts.parser() // El método parser se utiliza con el fin de analizar el token
+                .setSigningKey(ConstantesSeguridad.JWT_FIRMA)// Establece la clave de firma, que se utiliza para verificar la firma del token
+                .parseClaimsJws(token) //Se utiliza para verificar la firma del token, apartir del String "token"
+                .getBody(); /*Obtenemos el claims(cuerpo) ya verificado del token el cual contendrá la información de
+                nombre de usuario, fecha de expiración y firma del token*/
+        return claims.getSubject(); //Devolvemos el nombre de usuario
     }
 
-    /**
-     * It takes a JWT token as a string, and returns true if the token is valid, and
-     * false if it is not
-     *
-     * @param authToken The token that needs to be validated.
-     * @return A boolean value.
-     */
-    public boolean validateToken(String authToken) {
+    //Método para validar el token
+    public Boolean validarToken(String token) {
         try {
-
-            Jwts.parserBuilder()
-                    .setSigningKey(jwtSecret)
-                    .build()
-                    .parseClaimsJws(authToken);
+            //Validación del token por medio de la firma que contiene el String token(token)
+            //Si son idénticas validara el token o caso contrario saltara la excepción de abajo
+            Jwts.parser().setSigningKey(ConstantesSeguridad.JWT_FIRMA).parseClaimsJws(token);
             return true;
-        } catch (MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
-            return false;
+        } catch (Exception e) {
+            throw new AuthenticationCredentialsNotFoundException("Jwt ah expirado o esta incorrecto");
         }
     }
-
 }

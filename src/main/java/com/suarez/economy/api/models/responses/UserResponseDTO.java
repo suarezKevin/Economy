@@ -26,6 +26,6 @@ public class UserResponseDTO {
 
     private Boolean status;
 
-    private Role role;
+    private String roles;
 
 }

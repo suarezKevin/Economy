@@ -1,12 +1,9 @@
 package com.suarez.economy.domain.entities;
 
-import com.suarez.economy.util.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -19,7 +16,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    //@Column(name = "user_id")
+    @Column(name = "user_id")
     private UUID id;
 
     @Column(length = 10, nullable = false ,unique = true)
@@ -43,16 +40,22 @@ public class User {
     @Column(nullable = false)
     private Boolean status;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 13)
-    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "usuarios_roles",
+            joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "user_id")
+            ,inverseJoinColumns = @JoinColumn(name = "rol_id", referencedColumnName = "role_id"))
+    private List<Role> roles = new ArrayList<>();
 
     @ManyToOne(fetch =  FetchType.LAZY)
     private Institution institution;
 
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Amortization> amortizations = new ArrayList<>();
+
     @PrePersist
-    public void generateStatus(){
-        status = true;
+    public void prePersist(){
+        this.status = true;
     }
 
 }

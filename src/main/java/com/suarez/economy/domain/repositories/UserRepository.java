@@ -18,10 +18,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     /**
      * Check if a user exists by username.
      *
-     * @param username The username to check for.
+     * @param email The email to check for.
      * @return A boolean value.
      */
-    boolean existsByEmail(String username);
+    boolean existsByEmail(String email);
 
     boolean existsByIdentification(String indentification);
 
@@ -30,10 +30,10 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * if found, or an
      * empty Optional if not found.
      *
-     * @param username The username of the user you want to find.
+     * @param email The email of the user you want to find.
      * @return Optional<User>
      */
-    Optional<User> findByEmail(String username);
+    Optional<User> findByEmail(String email);
 
 //    /**
 //     * Find all users with a role in the given collection of roles.

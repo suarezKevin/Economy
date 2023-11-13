@@ -1,6 +1,6 @@
 package com.suarez.economy.api.models.requests;
 
-import com.suarez.economy.util.enums.Role;
+import com.suarez.economy.domain.entities.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -41,8 +41,5 @@ public class UserRequest {
     private Boolean status;
 
     private String logo;
-
-    @NotBlank(message = "El rol es obligatorio")
-    private Role role;
 
 }

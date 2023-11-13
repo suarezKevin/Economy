@@ -1,41 +1,43 @@
 package com.suarez.economy.service.services;
 
-import com.suarez.economy.api.models.requests.InstitutionRequest;
 import com.suarez.economy.api.models.requests.UserRequest;
 import com.suarez.economy.api.models.responses.UserResponseDTO;
 import com.suarez.economy.common.CustomAPIResponse;
 import com.suarez.economy.common.CustomResponseBuilder;
 import com.suarez.economy.domain.entities.Institution;
+import com.suarez.economy.domain.entities.Role;
 import com.suarez.economy.domain.entities.User;
 import com.suarez.economy.domain.repositories.InstitutionRepository;
+import com.suarez.economy.domain.repositories.RoleRepository;
 import com.suarez.economy.domain.repositories.UserRepository;
-import com.suarez.economy.security.model.UserPrincipal;
 import com.suarez.economy.service.abstract_services.IUserService;
-import com.suarez.economy.util.mappers.InstitutionMapper;
 import com.suarez.economy.util.mappers.UserMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.UUID;
 
 @Service
 @Transactional
-public class UserServiceImpl implements IUserService, UserDetailsService {
+public class UserServiceImpl implements IUserService{
 
     private final UserRepository userRepository;
 
+    private PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
     private final InstitutionRepository institutionRepository;
 
     private final CustomResponseBuilder responseBuilder;
 
 
-    public UserServiceImpl(UserRepository userRepository, InstitutionRepository institutionRepository, CustomResponseBuilder responseBuilder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository, InstitutionRepository institutionRepository, CustomResponseBuilder responseBuilder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
         this.institutionRepository = institutionRepository;
         this.responseBuilder = responseBuilder;
     }
@@ -51,8 +53,11 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
             institution.setLogo(request.getLogo());
         }
         institutionRepository.save(institution);
+        Role roles = roleRepository.findByName("ADMIN").get();
         User user = UserMapper.INSTANCE.userFromUserRequest(request);
+        user.setRoles(Collections.singletonList(roles));
         user.setInstitution(institution);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         UserResponseDTO userResponseDTO = UserMapper.INSTANCE.userResponseDTOFromUser(userRepository.save(user));
         return responseBuilder.buildResponse(HttpStatus.CREATED, "Registro exitosamente!", userResponseDTO);
     }
@@ -84,11 +89,4 @@ public class UserServiceImpl implements IUserService, UserDetailsService {
         return responseBuilder.buildResponse(HttpStatus.CREATED, "Usuario creado exitosamente!", userResponse);
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user =  userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("Usuario no encontrado!"));
-        UserPrincipal userPrincipal = UserMapper.INSTANCE.userPrincipalFromUser(user);
-        userPrincipal.setAuthorities(UserMapper.INSTANCE.mapRolesToAuthorities(user.getRole()));
-        return userPrincipal;
-    }
 }
