@@ -3,6 +3,7 @@ package com.suarez.economy.domain.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -21,5 +22,8 @@ public class Role {
 
     @Column(length = 50, nullable = false)
     private String name;
+
+    @ManyToMany(mappedBy = "roles")
+    private Set<User> users;
 
 }

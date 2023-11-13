@@ -1,8 +1,11 @@
 package com.suarez.economy.util.mappers;
 
 import com.suarez.economy.api.models.requests.UserRequest;
+import com.suarez.economy.api.models.responses.InstitutionResponse;
+import com.suarez.economy.api.models.responses.UserResponse;
 import com.suarez.economy.api.models.responses.UserResponseDTO;
 import com.suarez.economy.domain.entities.User;
+import com.suarez.economy.security.model.UserPrincipal;
 import com.suarez.economy.util.enums.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -17,12 +20,18 @@ public interface UserMapper {
 
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
+    UserPrincipal userPrincipalFromUser(User user);
+
     default List<SimpleGrantedAuthority> mapRolesToAuthorities(Role rol) {
         if (rol == null) {
             return Collections.emptyList();
         }
         return Collections.singletonList(new SimpleGrantedAuthority(rol.name()));
     }
+
+    @Mapping(target = "institution", source = "institutionResponse")
+    @Mapping(target = "id", source = "userPrincipal.id")
+    UserResponse userResponseFromUserPrincipal(UserPrincipal userPrincipal, InstitutionResponse institutionResponse);
 
     @Mapping(target = "id", source = "user.id")
     @Mapping(target = "status", source = "user.status")

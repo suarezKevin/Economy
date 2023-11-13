@@ -1,12 +1,16 @@
 package com.suarez.economy.api.controllers;
 
 import com.suarez.economy.api.models.requests.UserRequest;
+import com.suarez.economy.api.models.responses.JWTResponse;
 import com.suarez.economy.common.CustomAPIResponse;
 import com.suarez.economy.common.CustomResponseBuilder;
 import com.suarez.economy.dtos.DtoAuthRespuesta;
 import com.suarez.economy.dtos.DtoLogin;
 import com.suarez.economy.security.jwt.JWTProvider;
+import com.suarez.economy.security.model.UserPrincipal;
 import com.suarez.economy.service.abstract_services.IUserService;
+import com.suarez.economy.util.mappers.InstitutionMapper;
+import com.suarez.economy.util.mappers.UserMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,7 +51,9 @@ public class AuthController {
                 dtoLogin.getEmail(), dtoLogin.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtProvider.generarToken(authentication);
-        return new ResponseEntity<>(new DtoAuthRespuesta(token), HttpStatus.OK);
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        DtoAuthRespuesta dtoAuthRespuesta = new DtoAuthRespuesta(token,"Bearer ", UserMapper.INSTANCE.userResponseFromUserPrincipal(userPrincipal, InstitutionMapper.INSTANCE.institutionResponseFromInstitution(userPrincipal.getInstitution())));
+        return new ResponseEntity<>(dtoAuthRespuesta, HttpStatus.OK);
     }
 
 }
