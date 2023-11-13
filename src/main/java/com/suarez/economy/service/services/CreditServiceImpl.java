@@ -10,12 +10,16 @@ import com.suarez.economy.domain.repositories.CreditRepository;
 import com.suarez.economy.domain.repositories.InstitutionRepository;
 import com.suarez.economy.service.abstract_services.ICreditService;
 import com.suarez.economy.util.mappers.CreditMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
+@Transactional
 public class CreditServiceImpl implements ICreditService {
 
     private final CreditRepository creditRepository;
@@ -40,15 +44,15 @@ public class CreditServiceImpl implements ICreditService {
     }
 
     @Override
-    public ResponseEntity<CustomAPIResponse<?>> getAll() {
-        List<Credit> creditList = creditRepository.findAll();
+    public ResponseEntity<CustomAPIResponse<?>> getAll(UUID institutionid) {
+        List<Credit> creditList = creditRepository.findAllByInstitution_Id(institutionid);
         List<CreditResponse> creditResponseList = creditList.stream().map(CreditMapper.INSTANCE::creditResponseFromCredit).toList();
         return responseBuilder.buildResponse(HttpStatus.OK, "Lista de Créditos", creditResponseList);
     }
 
     @Override
-    public ResponseEntity<CustomAPIResponse<?>> update(UUID id, CreditRequest request) {
-        Credit creditToEdit = creditRepository.findById(id).orElseThrow(()-> new RuntimeException("Crédito no encontrado!"));
+    public ResponseEntity<CustomAPIResponse<?>> update(UUID idcredit, CreditRequest request) {
+        Credit creditToEdit = creditRepository.findById(idcredit).orElseThrow(()-> new RuntimeException("Crédito no encontrado!"));
         creditToEdit.setName(request.getName());
         creditToEdit.setMinimumamount(request.getMinimumamount());
         creditToEdit.setMaximumamount(request.getMaximumamount());
@@ -58,9 +62,17 @@ public class CreditServiceImpl implements ICreditService {
     }
 
     @Override
-    public ResponseEntity<CustomAPIResponse<?>> findByID(UUID id) {
-        Credit credit = creditRepository.findById(id).orElseThrow(()-> new RuntimeException("Crédito no encontrado!"));
+    public ResponseEntity<CustomAPIResponse<?>> findByID(UUID idcredit) {
+        Credit credit = creditRepository.findById(idcredit).orElseThrow(()-> new RuntimeException("Crédito no encontrado!"));
         CreditResponse creditResponse = CreditMapper.INSTANCE.creditResponseFromCredit(credit);
+        //creditResponse.setInstitution(credit.getInstitution().getId());
         return responseBuilder.buildResponse(HttpStatus.OK, "Crédito encontrado exitosamente!", creditResponse);
+    }
+
+    @Override
+    public ResponseEntity<CustomAPIResponse<?>> delete(UUID idcredit) {
+        Credit credit = creditRepository.findById(idcredit).orElseThrow(()-> new RuntimeException("Crédito no encontrado!"));
+        creditRepository.delete(credit);
+        return responseBuilder.buildResponse(HttpStatus.OK, "Crédito eliminado exitosamente!");
     }
 }

@@ -23,12 +23,10 @@ import java.util.stream.Collectors;
 public class CustomUsersDetailsService implements UserDetailsService {
 
     private UserRepository userRepository;
-    private RoleRepository roleRepository;
 
     @Autowired
-    public CustomUsersDetailsService(UserRepository userRepository, RoleRepository roleRepository) {
+    public CustomUsersDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
     }
     //Método para traernos una lista de autoridades por medio de una lista de roles
     public Collection<GrantedAuthority> mapToAuthorities(List<Role> roles){

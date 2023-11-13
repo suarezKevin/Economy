@@ -18,7 +18,7 @@ public class Credit {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     //@Column(name = "credit_id")
-    private String id;
+    private UUID id;
 
     @Column(length = 100, nullable = false)
     private String name;
@@ -43,5 +43,10 @@ public class Credit {
 
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "credit")
     private List<IndirectCharges> indirectCharges = new ArrayList<>();
+
+    @PrePersist
+    public void prePersist(){
+        createdat = new Date();
+    }
 
 }

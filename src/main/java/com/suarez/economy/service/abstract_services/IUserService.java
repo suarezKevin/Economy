@@ -1,6 +1,5 @@
 package com.suarez.economy.service.abstract_services;
 
-import com.suarez.economy.api.models.requests.InstitutionRequest;
 import com.suarez.economy.api.models.requests.UserRequest;
 import com.suarez.economy.common.CustomAPIResponse;
 import org.springframework.http.ResponseEntity;

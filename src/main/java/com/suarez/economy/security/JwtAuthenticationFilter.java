@@ -20,8 +20,10 @@ import java.util.List;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
+    @Autowired
     private CustomUsersDetailsService customUsersDetailsService;
 
+    @Autowired
     private JWTProvider jwtGenerador;
 
     /*Con el siguiente método extraeremos  el token JWT de la cabecera de nuestra petición Http("Authorization")
