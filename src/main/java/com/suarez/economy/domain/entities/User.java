@@ -31,10 +31,10 @@ public class User {
     @Column(length = 10, nullable = false ,unique = true)
     private String telephone;
 
-    @Column(length = 100, nullable = false ,unique = true)
+    @Column(length = 100, nullable = false)
     private String address;
 
-    @Column(length = 100, nullable = false ,unique = true)
+    @Column(length = 100, nullable = false)
     private String password;
 
     @Column(nullable = false)
