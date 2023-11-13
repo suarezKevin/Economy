@@ -54,7 +54,7 @@ public class UserServiceImpl implements IUserService{
         }
         institutionRepository.save(institution);
         User user = UserMapper.INSTANCE.userFromUserRequest(request);
-        Role roles = roleRepository.findByName("ADMIN").get();
+        Role roles = roleRepository.findByName("ADMINISTRADOR").get();
         user.setRoles(Collections.singletonList(roles));
         user.setInstitution(institution);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
