@@ -11,7 +11,6 @@ import java.util.UUID;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class IndirectCharges {
 
     @Id
@@ -22,7 +21,7 @@ public class IndirectCharges {
     @Column(length = 100, nullable = false)
     private String name;
 
-    @Column(length = 150, nullable = false)
+    @Column(length = 150)
     private String description;
 
     @Column(nullable = false)
