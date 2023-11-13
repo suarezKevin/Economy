@@ -9,12 +9,16 @@ import com.suarez.economy.domain.entities.Institution;
 import com.suarez.economy.domain.repositories.InstitutionRepository;
 import com.suarez.economy.service.abstract_services.IInstitutionService;
 import com.suarez.economy.util.mappers.InstitutionMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
+@Transactional
 public class InstitutionServiceImpl implements IInstitutionService {
 
     private final InstitutionRepository institutionRepository;
