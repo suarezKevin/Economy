@@ -22,4 +22,9 @@ public class TypeOfAmortization {
     @Column(length = 50, nullable = false)
     private String name;
 
+    public TypeOfAmortization setName(String name) {
+        this.name = name;
+        return this;
+    }
+
 }
