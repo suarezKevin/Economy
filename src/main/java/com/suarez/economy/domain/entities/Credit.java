@@ -44,6 +44,10 @@ public class Credit {
     @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "credit")
     private List<IndirectCharges> indirectCharges = new ArrayList<>();
 
+    public void addCharges(IndirectCharges charges){
+        this.indirectCharges.add(charges);
+    }
+
     @PrePersist
     public void prePersist(){
         createdat = new Date();

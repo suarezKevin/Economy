@@ -30,6 +30,11 @@ public class CreditController {
         return creditService.getAll(institutionid);
     }
 
+    @GetMapping(value = "/credits-charges/{institutionid}")
+    public ResponseEntity<CustomAPIResponse<?>> getAllCreditAndChargeByInstitutionId(@PathVariable final UUID institutionid){
+        return creditService.getAllCreditAndChargeByInstitutionId(institutionid);
+    }
+
     @PutMapping(value = "/{idcredit}")
     public ResponseEntity<CustomAPIResponse<?>> update(@PathVariable final UUID idcredit, @RequestBody final CreditRequest request){
         return creditService.update(idcredit, request);

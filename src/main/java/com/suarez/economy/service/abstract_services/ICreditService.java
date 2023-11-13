@@ -12,6 +12,8 @@ public interface ICreditService {
 
     ResponseEntity<CustomAPIResponse<?>> getAll(UUID institutionid);
 
+    ResponseEntity<CustomAPIResponse<?>> getAllCreditAndChargeByInstitutionId(UUID institutionid);
+
     ResponseEntity<CustomAPIResponse<?>> update(UUID id, CreditRequest request);
 
     ResponseEntity<CustomAPIResponse<?>> findByID(UUID id);

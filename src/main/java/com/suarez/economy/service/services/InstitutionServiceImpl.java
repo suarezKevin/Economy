@@ -4,6 +4,7 @@ import com.suarez.economy.api.models.requests.InstitutionRequest;
 import com.suarez.economy.api.models.responses.InstitutionResponse;
 import com.suarez.economy.common.CustomAPIResponse;
 import com.suarez.economy.common.CustomResponseBuilder;
+import com.suarez.economy.domain.entities.Credit;
 import com.suarez.economy.domain.entities.Institution;
 import com.suarez.economy.domain.repositories.InstitutionRepository;
 import com.suarez.economy.service.abstract_services.IInstitutionService;
@@ -36,7 +37,7 @@ public class InstitutionServiceImpl implements IInstitutionService {
     public ResponseEntity<CustomAPIResponse<?>> getAll() {
         List<Institution> institutionList = institutionRepository.findAll();
         List<InstitutionResponse> institutionResponseList = institutionList.stream().map(InstitutionMapper.INSTANCE::institutionResponseFromInstitution).toList();
-        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de Créditos", institutionResponseList);
+        return responseBuilder.buildResponse(HttpStatus.OK, "Lista de Instituciones", institutionResponseList);
     }
 
     @Override

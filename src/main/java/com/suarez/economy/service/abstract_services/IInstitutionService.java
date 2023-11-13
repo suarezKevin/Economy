@@ -9,8 +9,11 @@ import java.util.UUID;
 public interface IInstitutionService {
 
     ResponseEntity<CustomAPIResponse<?>> save(InstitutionRequest request);
+
     ResponseEntity<CustomAPIResponse<?>> getAll();
+
     ResponseEntity<CustomAPIResponse<?>> update(UUID id, InstitutionRequest request);
+
     ResponseEntity<CustomAPIResponse<?>> findByID(UUID id);
 
 }
