@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "public/type-amortization")
-public class AmortizationController {
+public class TypeAmortizationController {
 
     private final ITypeOfAmortizationService amortizationService;
 
-    public AmortizationController(ITypeOfAmortizationService amortizationService) {
+    public TypeAmortizationController(ITypeOfAmortizationService amortizationService) {
         this.amortizationService = amortizationService;
     }
 
