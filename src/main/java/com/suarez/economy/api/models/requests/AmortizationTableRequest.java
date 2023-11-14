@@ -11,4 +11,6 @@ public class AmortizationTableRequest {
 
     private double interestrate;
 
+    private double chargesamount;
+
 }
